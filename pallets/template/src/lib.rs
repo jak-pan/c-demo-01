@@ -65,7 +65,7 @@ pub use weights::*;
 pub mod pallet {
 	// Import various useful types required by all FRAME pallets.
 	use super::*;
-	use frame_support::pallet_prelude::*;
+	use frame_support::{dispatch::{Pays, DispatchClass}, pallet_prelude::*};
 	use frame_system::pallet_prelude::*;
 
 	// The `Pallet` struct serves as a placeholder to implement traits, methods and dispatchables
@@ -91,7 +91,7 @@ pub mod pallet {
 	/// In this template, we are declaring a storage item called `Something` that stores a single
 	/// `u32` value. Learn more about runtime storage here: <https://docs.substrate.io/build/runtime-storage/>
 	#[pallet::storage]
-	pub type Something<T> = StorageValue<_, u32>;
+	pub type Something<T: Config> = StorageMap<_, Blake2_128Concat, T::AccountId, u32, OptionQuery>;
 
 	/// Events that functions in this pallet can emit.
 	///
@@ -108,8 +108,6 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		/// A user has successfully set a new value.
 		SomethingStored {
-			/// The new value set.
-			something: u32,
 			/// The account who set the new value.
 			who: T::AccountId,
 		},
@@ -125,8 +123,8 @@ pub mod pallet {
 	/// information.
 	#[pallet::error]
 	pub enum Error<T> {
-		/// The value retrieved was `None` as no value was previously set.
-		NoneValue,
+		/// The value was previously set.
+		ValueSet,
 		/// There was an attempt to increment the value in storage over `u32::MAX`.
 		StorageOverflow,
 	}
@@ -151,52 +149,23 @@ pub mod pallet {
 		/// It checks that the _origin_ for this call is _Signed_ and returns a dispatch
 		/// error if it isn't. Learn more about origins here: <https://docs.substrate.io/build/origins/>
 		#[pallet::call_index(0)]
-		#[pallet::weight(T::WeightInfo::do_something())]
-		pub fn do_something(origin: OriginFor<T>, something: u32) -> DispatchResult {
+		#[pallet::weight((T::WeightInfo::do_something(), DispatchClass::Normal, Pays::No))]
+		pub fn do_something(origin: OriginFor<T>) -> DispatchResultWithPostInfo {
 			// Check that the extrinsic was signed and get the signer.
 			let who = ensure_signed(origin)?;
 
+			if Something::<T>::get(&who).is_some() {
+				return Err(Error::<T>::ValueSet.into())
+			}
+
 			// Update storage.
-			Something::<T>::put(something);
+			Something::<T>::insert(&who, 1u32);
 
 			// Emit an event.
-			Self::deposit_event(Event::SomethingStored { something, who });
+			Self::deposit_event(Event::SomethingStored { who });
 
 			// Return a successful `DispatchResult`
-			Ok(())
-		}
-
-		/// An example dispatchable that may throw a custom error.
-		///
-		/// It checks that the caller is a signed origin and reads the current value from the
-		/// `Something` storage item. If a current value exists, it is incremented by 1 and then
-		/// written back to storage.
-		///
-		/// ## Errors
-		///
-		/// The function will return an error under the following conditions:
-		///
-		/// - If no value has been set ([`Error::NoneValue`])
-		/// - If incrementing the value in storage causes an arithmetic overflow
-		///   ([`Error::StorageOverflow`])
-		#[pallet::call_index(1)]
-		#[pallet::weight(T::WeightInfo::cause_error())]
-		pub fn cause_error(origin: OriginFor<T>) -> DispatchResult {
-			let _who = ensure_signed(origin)?;
-
-			// Read a value from storage.
-			match Something::<T>::get() {
-				// Return an error if the value has not been set.
-				None => Err(Error::<T>::NoneValue.into()),
-				Some(old) => {
-					// Increment the value read from storage. This will cause an error in the event
-					// of overflow.
-					let new = old.checked_add(1).ok_or(Error::<T>::StorageOverflow)?;
-					// Update the value in storage with the incremented result.
-					Something::<T>::put(new);
-					Ok(())
-				},
-			}
+			Ok(().into())
 		}
 	}
 }

@@ -1,15 +1,25 @@
 {
-  "name": "c-demo-01-ui",
+  "name": "template-pallet-ui",
   "version": "1.0.0",
-  "description": "",
+  "description": "UI for template pallet",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@talismn/connect-wallets": "^1.2.8",
-    "polkadot-api": "^1.9.5"
+    "@polkadot/api": "^15.8.1",
+    "@polkadot/util-crypto": "^13.4.3",
+    "@polkadot/extension-dapp": "^0.46.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "^4.9.1",
+    "typescript": "^5.8.2"
   }
 }

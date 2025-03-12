@@ -1,0 +1,360 @@
+:root {
+  --primary: #e6007a;
+  --background: #ffffff;
+  --text: #1a1a1a;
+  --border: #e0e0e0;
+  --hover: #f6f6f6;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.5;
+  padding-top: 60px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 60px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0;
+  color: var(--text);
+}
+
+.container {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px var(--shadow);
+  margin-top: 2rem;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+/* Table Styles */
+table {
+  text-align: center;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+th {
+  padding: 12px 16px;
+  background: var(--hover);
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  color: var(--text);
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: monospace;
+  font-size: 0.9em;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: var(--hover);
+}
+
+@media (min-width: 768px) {
+  td {
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+  }
+}
+
+/* Wallet Styles */
+.wallet-container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.wallet-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  height: 64px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: white !important;
+  color: var(--text) !important;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.wallet-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.wallet-dropdown {
+  display: none;
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 24px;
+  padding: 8px;
+  background: white;
+  z-index: 100;
+}
+
+.wallet-dropdown.show {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.wallet-option {
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.wallet-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.wallet-name {
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+.install-pill {
+  background: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.install-pill:hover {
+  opacity: 0.9;
+}
+
+.wallet-option.disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.wallet-option:not(.disabled):hover {
+  background: var(--hover);
+}
+
+.connected-address {
+  font-size: 0.85em;
+  color: #666;
+  font-family: monospace;
+}
+
+/* Status bar styles */
+.status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.status-dot.connected {
+  background: #4caf50;
+}
+
+.status-dot.error {
+  background: #f44336;
+}
+
+.status-dot.connecting {
+  background: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+.block-number {
+  font-family: monospace;
+  color: var(--text);
+}
+
+.action-button {
+  align-self: flex-start;
+  height: 64px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+}
+
+/* Bottom bar styles */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.transaction-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-family: monospace;
+}
+
+.transaction-status.error {
+  color: #f44336;
+}
+
+.transaction-status.success {
+  color: #4caf50;
+}
+
+.export-button {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  height: auto;
+}
+
+.me-pill {
+  background: var(--primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7em;
+  font-family: "Inter", sans-serif;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+tr.current-user td {
+  font-weight: 600;
+  background: var(--hover);
+}
+
+tr.current-user:hover td {
+  background: #f0f0f0;
+}

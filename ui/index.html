@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template Pallet Interface</title>
+    <link rel="stylesheet" href="src/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="status-bar">
+      <div class="status-indicator">
+        <div id="statusDot" class="status-dot"></div>
+      </div>
+      <div class="block-number" id="blockNumber">Block: -</div>
+    </div>
+
+    <div class="main-content">
+      <div class="actions">
+        <div class="wallet-container">
+          <button id="walletButton" class="wallet-button">
+            Connect Wallet
+          </button>
+          <div id="walletDropdown" class="wallet-dropdown"></div>
+        </div>
+
+        <button
+          class="action-button"
+          onclick="window.something()"
+          id="actionButton"
+          disabled
+        >
+          Do Something
+        </button>
+      </div>
+
+      <div id="accountTable">
+        <table>
+          <thead>
+            <tr>
+              <th><span id="accountCount">NOBODY</span> DID SOMETHING</th>
+            </tr>
+          </thead>
+          <tbody id="accountTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="transaction-status" id="transactionStatus"></div>
+      <button
+        class="export-button"
+        onclick="window.exportAccounts()"
+        id="exportButton"
+      >
+        Export
+      </button>
+    </div>
+
+    <script type="module" src="dist/script.js"></script>
+  </body>
+</html>

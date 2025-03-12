@@ -150,7 +150,7 @@ pub mod pallet {
 		/// error if it isn't. Learn more about origins here: <https://docs.substrate.io/build/origins/>
 		#[pallet::call_index(0)]
 		#[pallet::weight((T::WeightInfo::do_something(), DispatchClass::Normal, Pays::No))]
-		pub fn do_something(origin: OriginFor<T>) -> DispatchResultWithPostInfo {
+		pub fn do_something(origin: OriginFor<T>) -> DispatchResult {
 			// Check that the extrinsic was signed and get the signer.
 			let who = ensure_signed(origin)?;
 

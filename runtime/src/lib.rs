@@ -7,6 +7,7 @@ pub mod apis;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarks;
 pub mod configs;
+pub mod nonce;
 
 extern crate alloc;
 use alloc::vec::Vec;
@@ -153,7 +154,7 @@ pub type TxExtension = (
 	frame_system::CheckTxVersion<Runtime>,
 	frame_system::CheckGenesis<Runtime>,
 	frame_system::CheckEra<Runtime>,
-	frame_system::CheckNonce<Runtime>,
+	nonce::CheckNonce<Runtime>,
 	frame_system::CheckWeight<Runtime>,
 	pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
 	frame_metadata_hash_extension::CheckMetadataHash<Runtime>,
@@ -224,3 +225,4 @@ mod runtime {
 	#[runtime::pallet_index(7)]
 	pub type Something = pallet_template;
 }
+

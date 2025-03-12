@@ -1,6 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { encodeAddress } from "@polkadot/util-crypto";
-import { web3Enable } from "@polkadot/extension-dapp";
 import {
   setState,
   setupWalletUI,
@@ -28,6 +27,7 @@ function updateBlockNumber(blockNumber: string) {
   if (blockElement) {
     blockElement.textContent = `Block: ${blockNumber}`;
   }
+  renderTable();
 }
 
 async function subscribeToBlocks() {
@@ -213,11 +213,10 @@ async function initializeAPI() {
       updateBlockNumber("-");
     });
 
-    // Initialize web3 after API is ready
-    await web3Enable("my-template-app");
+    // Only setup UI, don't enable web3 yet
     setupWalletUI();
-    await tryReconnectLastWallet();
     await renderTable();
+    tryReconnectLastWallet();
 
     return true;
   } catch (error) {

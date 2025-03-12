@@ -8,6 +8,12 @@ import { wallets } from "./walletConfig";
 import type { ApiPromise } from "@polkadot/api";
 import { renderTable } from "./script";
 
+declare global {
+  interface Window {
+    injectedWeb3?: Record<string, any>;
+  }
+}
+
 export interface WalletState {
   account: any;
   api: ApiPromise;
@@ -28,6 +34,12 @@ export async function connectWallet(walletType: string) {
   try {
     if (!state.api?.isReady) {
       throw new Error("API not ready. Please wait for connection.");
+    }
+
+    // Enable web3 when actually connecting
+    const extensions = await web3Enable("my-template-app");
+    if (extensions.length === 0) {
+      throw new Error("No extensions found");
     }
 
     // Get all accounts with their source info
@@ -88,8 +100,8 @@ export async function checkWalletAvailability(
   if (!state.api?.isReady) return false;
 
   try {
-    const extensions = await web3Enable("my-template-app");
-    return extensions.some((ext) => ext.name.toLowerCase().includes(source));
+    // Don't enable web3 here, just check if extension exists
+    return window?.injectedWeb3?.[source] !== undefined;
   } catch {
     return false;
   }

@@ -128,25 +128,6 @@ export function updateWalletDropdown() {
 
   dropdown.innerHTML = "";
 
-  // Add disconnect button if wallet is connected
-  if (state.account) {
-    const disconnectDiv = document.createElement("div");
-    disconnectDiv.className = "wallet-option disconnect";
-    disconnectDiv.innerHTML = `
-      <span class="wallet-name">Disconnect Wallet</span>
-    `;
-    disconnectDiv.addEventListener("click", () => {
-      state.account = null;
-      localStorage.removeItem("lastWalletType");
-      updateWalletButton();
-      updateActionButton(false);
-      dropdown.classList.remove("show");
-      updateWalletDropdown();
-    });
-    dropdown.appendChild(disconnectDiv);
-    return;
-  }
-
   const availableWallets = wallets.filter(
     (wallet) => !isMobile || wallet.mobileSupport
   );

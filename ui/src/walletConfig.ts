@@ -29,7 +29,7 @@ export const wallets: WalletConfig[] = [
     id: "nova",
     icon: "https://raw.githubusercontent.com/galacticcouncil/hydration-ui/refs/heads/master/src/assets/icons/SubWalletLogo.svg",
     source: "polkadot-js",
-    installUrl: "https://www.subwallet.app/download.html",
+    installUrl: "https://mobile.subwallet.app/browser?url=c-demo.netlify.app",
     mobileSupport: true,
   },
   {

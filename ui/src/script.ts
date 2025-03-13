@@ -222,7 +222,12 @@ async function initializeAPI() {
   try {
     updateConnectionStatus("connecting", "Connecting to node...");
 
-    const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+    const wsUrl =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+        ? "ws://127.0.0.1:9944"
+        : "wss://demo.hydration.dev";
+    const wsProvider = new WsProvider(wsUrl);
     api = await ApiPromise.create({
       provider: wsProvider,
       throwOnConnect: true,

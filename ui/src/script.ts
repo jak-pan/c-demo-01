@@ -52,7 +52,7 @@ export async function renderTable() {
     const formattedAccount = getFormattedAddress();
 
     // Update count in header
-    countElement.textContent = count === 0 ? "NOONE" : count.toString();
+    countElement.textContent = count === 0 ? "NOBODY" : count.toString();
 
     // Sort entries to put current account first
     const sortedEntries = result.sort(([keyA], [keyB]) => {

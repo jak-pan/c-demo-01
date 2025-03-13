@@ -48,6 +48,8 @@ export async function connectWallet(walletType: string) {
       throw new Error("No accounts found");
     }
 
+    console.log("source", allAccounts);
+
     // Filter accounts based on wallet type
     const walletAccounts = allAccounts.filter((acc) => {
       switch (walletType) {
@@ -58,7 +60,11 @@ export async function connectWallet(walletType: string) {
         case "subwallet":
           return acc.meta.source === "subwallet-js";
         case "nova":
-          return acc.meta.source === "nova";
+          // Nova Wallet uses polkadot-js as its source
+          return (
+            acc.meta.source === "polkadot-js" &&
+            (window as any).walletExtension?.isNovaWallet
+          );
         default:
           return false;
       }
@@ -100,7 +106,16 @@ export async function checkWalletAvailability(
   if (!state.api?.isReady) return false;
 
   try {
-    // Don't enable web3 here, just check if extension exists
+    // Special handling for Nova Wallet
+    if (source === "nova") {
+      // Check if we're in Nova Wallet's in-app browser
+      const isNovaWallet = (window as any).walletExtension?.isNovaWallet;
+      if (isNovaWallet) {
+        return true;
+      }
+    }
+
+    // For other wallets, check if extension exists
     return window?.injectedWeb3?.[source] !== undefined;
   } catch {
     return false;
@@ -112,6 +127,25 @@ export function updateWalletDropdown() {
   if (!dropdown) return;
 
   dropdown.innerHTML = "";
+
+  // Add disconnect button if wallet is connected
+  if (state.account) {
+    const disconnectDiv = document.createElement("div");
+    disconnectDiv.className = "wallet-option disconnect";
+    disconnectDiv.innerHTML = `
+      <span class="wallet-name">Disconnect Wallet</span>
+    `;
+    disconnectDiv.addEventListener("click", () => {
+      state.account = null;
+      localStorage.removeItem("lastWalletType");
+      updateWalletButton();
+      updateActionButton(false);
+      dropdown.classList.remove("show");
+      updateWalletDropdown();
+    });
+    dropdown.appendChild(disconnectDiv);
+    return;
+  }
 
   const availableWallets = wallets.filter(
     (wallet) => !isMobile || wallet.mobileSupport
@@ -173,14 +207,21 @@ export function updateWalletButton() {
   if (!button) return;
 
   if (state.account) {
-    const wallet = wallets.find((w) => w.source === state.account.meta.source);
+    const wallet = wallets.find(
+      (w) =>
+        w.id ===
+        ((window as any).walletExtension?.isNovaWallet
+          ? "nova"
+          : state.account.meta.source)
+    );
     const polkadotAddress = encodeAddress(state.account.address, 0);
     const shortAddress = `${polkadotAddress.slice(
       0,
       6
     )}...${polkadotAddress.slice(-4)}`;
-    button.innerHTML = `
-      <img src="${wallet?.icon}" alt="${wallet?.name}" class="wallet-icon">
+    button.innerHTML = `      <img src="${wallet?.icon}" alt="${
+      wallet?.name
+    }" class="wallet-icon">
       <div>
         <div>${wallet?.name || "Connected"}</div>
         <div class="connected-address">${shortAddress}</div>

@@ -20,7 +20,7 @@ export const wallets: WalletConfig[] = [
     name: "Nova Wallet",
     id: "nova",
     icon: "https://raw.githubusercontent.com/galacticcouncil/hydration-ui/refs/heads/master/src/assets/icons/NovaWallet.svg",
-    source: "nova",
+    source: "polkadot-js",
     installUrl: "https://novawallet.io/",
     mobileSupport: true,
   },

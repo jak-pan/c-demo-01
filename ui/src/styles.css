@@ -213,6 +213,17 @@ tr:hover td {
   background: var(--hover);
 }
 
+.wallet-option.disconnect {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+  color: #ff4444;
+}
+
+.wallet-option.disconnect:hover {
+  background: #fff1f1;
+}
+
 .connected-address {
   font-size: 0.85em;
   color: #666;

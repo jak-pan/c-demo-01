@@ -57,8 +57,6 @@ export async function connectWallet(walletType: string) {
           return acc.meta.source === "polkadot-js";
         case "talisman":
           return acc.meta.source === "talisman";
-        case "subwallet":
-          return acc.meta.source === "subwallet-js";
         case "nova":
           // Nova Wallet uses polkadot-js as its source
           return (

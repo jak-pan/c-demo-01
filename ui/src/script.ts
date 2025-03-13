@@ -8,6 +8,7 @@ import {
   getWalletSigner,
   getFormattedAddress,
 } from "./wallet";
+import QRCode from "qrcode";
 
 let api: ApiPromise;
 
@@ -180,6 +181,43 @@ async function something() {
   }
 }
 
+async function generateQRCode() {
+  const canvas = document.getElementById("qrCode") as HTMLCanvasElement;
+  if (!canvas) return;
+
+  const currentUrl = window.location.href;
+  try {
+    await QRCode.toCanvas(canvas, currentUrl, {
+      width: 2048,
+      margin: 4,
+      scale: 8,
+      color: {
+        dark: "#1a1a1a",
+        light: "#ffffff",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to generate QR code:", error);
+  }
+}
+
+function setupQRCodeToggle() {
+  const toggleButton = document.getElementById("qrToggle");
+  const qrContainer = document.querySelector(".qr-code-container");
+
+  if (!toggleButton || !qrContainer) return;
+
+  toggleButton.addEventListener("click", () => {
+    const isVisible = qrContainer.classList.contains("show");
+    qrContainer.classList.toggle("show");
+    toggleButton.classList.toggle("active");
+
+    if (!isVisible) {
+      generateQRCode();
+    }
+  });
+}
+
 async function initializeAPI() {
   try {
     updateConnectionStatus("connecting", "Connecting to node...");
@@ -212,6 +250,9 @@ async function initializeAPI() {
       updateConnectionStatus("error", "Connection error");
       updateBlockNumber("-");
     });
+
+    // Setup QR code toggle
+    setupQRCodeToggle();
 
     // Only setup UI, don't enable web3 yet
     setupWalletUI();

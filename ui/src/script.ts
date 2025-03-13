@@ -44,6 +44,12 @@ export async function renderTable() {
     const result = await api.query.something.something.entries();
     const tbody = document.getElementById("accountTableBody");
     const countElement = document.getElementById("accountCount");
+    const doSomethingElseButton = document.getElementById(
+      "doSomethingElseButton"
+    ) as HTMLButtonElement;
+    const actionButton = document.getElementById(
+      "actionButton"
+    ) as HTMLButtonElement;
 
     if (!tbody || !countElement) return;
 
@@ -53,6 +59,20 @@ export async function renderTable() {
 
     // Update count in header
     countElement.textContent = count === 0 ? "NOBODY" : count.toString();
+
+    // Check if current user's account is in the list
+    const hasUserAccount = result.some(([key]) => {
+      const accountId = encodeAddress(key.args[0].toU8a(), 0);
+      return formattedAccount && accountId === formattedAccount;
+    });
+
+    // Enable/disable the buttons based on account presence
+    if (doSomethingElseButton) {
+      doSomethingElseButton.disabled = !hasUserAccount;
+    }
+    if (actionButton) {
+      actionButton.disabled = !formattedAccount || hasUserAccount;
+    }
 
     // Sort entries to put current account first
     const sortedEntries = result.sort(([keyA], [keyB]) => {
@@ -218,6 +238,19 @@ function setupQRCodeToggle() {
   });
 }
 
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+}
+
+async function doSomethingElse() {
+  const url = isMobileDevice()
+    ? "https://mobile.subwallet.app/browser?url=app.hydration.net/wallet/assets"
+    : "https://app.hydration.net/wallet";
+  window.open(url, "_blank");
+}
+
 async function initializeAPI() {
   try {
     updateConnectionStatus("connecting", "Connecting to node...");
@@ -281,3 +314,4 @@ window.addEventListener("load", async () => {
 // Make functions available globally
 (window as any).something = something;
 (window as any).exportAccounts = exportAccounts;
+(window as any).doSomethingElse = doSomethingElse;
